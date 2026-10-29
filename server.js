@@ -15,6 +15,11 @@ app.get("/api/f2", (req, res) => {
     res.send("Welcome to Feature-2");
 });
 
+app.get("/api/f3", (req, res) => {
+    res.send("Welcome to Feature-3");
+});
+
+
 app.get("/api/gh", (req, res) => {
 res.send("Github Actions deployed successfully");
 });
