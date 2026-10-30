@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Deploy Docker container to EC2
         uses: appleboy/ssh-action@v1.2.0
         with:
@@ -22,11 +25,11 @@ jobs:
             # Pull the latest Docker image
             sudo docker pull devopsbootcampa/devops-node-app:v1
 
-            # Stop and remove the previous container
+            # Stop and remove the previous container if it exists
             sudo docker stop devops-node-app || true
             sudo docker rm devops-node-app || true
 
-            # Start the new container
+            # Start the new container (bound to localhost:3001 on the VM)
             sudo docker run -d \
               --name devops-node-app \
               --restart unless-stopped \
