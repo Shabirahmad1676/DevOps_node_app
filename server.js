@@ -26,10 +26,12 @@ app.get("/f3", (req, res) => {
     res.send("Welcome to Feature-3");
 });
 
-// This maps to: https://duckdns.orggh
-app.get("/gh", (req, res) => {
-    res.send("Github Actions deployed successfully");
+app.get("/f4", (req, res) => {
+    res.send("Welcome to Feature-4");
 });
+
+
+
 
 // This maps to: https://duckdns.orghealth
 app.get("/health", (req, res) => {
