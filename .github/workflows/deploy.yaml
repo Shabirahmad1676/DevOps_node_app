@@ -2,7 +2,8 @@ name: Deploy Node.js App with Docker
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -18,13 +19,19 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            # Pull the latest Docker image
             sudo docker pull devopsbootcampa/devops-node-app:v1
 
+            # Stop and remove the previous container
             sudo docker stop devops-node-app || true
             sudo docker rm devops-node-app || true
 
+            # Start the new container
             sudo docker run -d \
               --name devops-node-app \
               --restart unless-stopped \
               -p 127.0.0.1:3001:3000 \
               devopsbootcampa/devops-node-app:v1
+
+            # Verify container is running
+            sudo docker ps
