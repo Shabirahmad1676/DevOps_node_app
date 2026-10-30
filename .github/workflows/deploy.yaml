@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy Node.js App with Docker
 
 on:
   push:
@@ -8,8 +8,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Pull, build and restart PM2
+      - name: Deploy Docker container to EC2
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -17,19 +18,13 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            # 1. Load NVM so Node/NPM/PM2 environments are mounted
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            
-            # 2. Go to your correct, case-sensitive folder path
-            cd /var/www/DevOps_node_app
-            
-            # 3. Pull down clean changes from GitHub
-            git fetch --all
-            git reset --hard origin/main
-            
-            # 4. Install dependencies
-            npm install --production
-            
-            # 5. Automatically restart or launch server.js under PM2 process tracking
-            pm2 reload express-api --update-env || pm2 start server.js --name "express-api"
+            sudo docker pull devopsbootcampa/devops-node-app:v1
+
+            sudo docker stop devops-node-app || true
+            sudo docker rm devops-node-app || true
+
+            sudo docker run -d \
+              --name devops-node-app \
+              --restart unless-stopped \
+              -p 127.0.0.1:3001:3000 \
+              devopsbootcampa/devops-node-app:v1
